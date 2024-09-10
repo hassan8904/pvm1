@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Files</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>File List</h1>
+        <form action="/files" method="get">
+            <input type="text" name="search" placeholder="Search by name" value="{{ search_query }}">
+            <select name="sort">
+                <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Sort by Name</option>
+                <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Sort by Date</option>
+            </select>
+            <button type="submit">Apply</button>
+        </form>
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>{{ file.name }}</td>
+                        <td>{{ file.date.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td><a href="{{ url_for('download_file', filename=file.name) }}">Download</a></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="3">No files found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
